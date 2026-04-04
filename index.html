@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>SpoofProof — Real-Time Trust-Based Fraud Detection for Parametric Insurance.</title>
+  
+  <meta name="description" content="Real-time fraud detection dashboard for parametric insurance. Protect delivery workers during extreme weather while preventing GPS spoofing fraud." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+</head>
+<body>
+  <!-- Landing / Role Selector -->
+  <div id="landing-screen" class="screen active">
+    <div class="landing-bg">
+      <div class="grid-overlay"></div>
+      <div class="particles" id="landing-particles"></div>
+    </div>
+    <div class="landing-content">
+      <div class="logo-container">
+        <div class="logo-icon">
+           <img src="/logo.png" alt="SpoofProof Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+        </div>
+        <h1 class="logo-text">Spoof<span class="accent">Proof</span></h1>
+        <p class="logo-sub">Trust-Based Fraud Detection for Parametric Insurance</p>
+        <p class="logo-sub">This is a Prototype Model for representing the idea of the solution.</p>
+      </div>
+      <div class="role-cards">
+        <button class="role-card" id="btn-worker" onclick="window.app.selectRole('worker')">
+          <div class="role-icon">🚴</div>
+          <h3>Delivery Worker</h3>
+          <p>Mobile claim submission & real-time trust verification</p>
+          <div class="role-arrow">→</div>
+        </button>
+        <button class="role-card" id="btn-admin" onclick="window.app.selectRole('admin')">
+          <div class="role-icon">🛡️</div>
+          <h3>Admin Dashboard</h3>
+          <p>Fraud detection, cluster analysis & claim management</p>
+          <div class="role-arrow">→</div>
+        </button>
+      </div>
+      <!-- Demo Mode Toggle -->
+      <div class="demo-panel">
+        <div class="demo-label">
+          <span class="demo-dot"></span>
+          Simulate Scenario
+        </div>
+        <div class="demo-options">
+          <button class="demo-btn active" data-scenario="real" onclick="window.app.setScenario('real')">
+            <span class="demo-icon">✅</span> Real Worker
+          </button>
+          <button class="demo-btn" data-scenario="spoofer" onclick="window.app.setScenario('spoofer')">
+            <span class="demo-icon">📡</span> GPS Spoofer
+          </button>
+          <button class="demo-btn" data-scenario="ring" onclick="window.app.setScenario('ring')">
+            <span class="demo-icon">🕸️</span> Fraud Ring
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Worker App Container (Mobile) -->
+  <div id="worker-app" class="screen">
+    <div class="mobile-frame">
+      <div class="mobile-status-bar">
+        <span class="time-display">21:19</span>
+        <div class="status-icons">
+          <span class="signal-bars">▂▄▆█</span>
+          <span class="battery">🔋</span>
+        </div>
+      </div>
+      <div id="worker-content" class="mobile-content"></div>
+      <div class="mobile-nav" id="worker-nav" style="display:none">
+        <button class="nav-btn active" data-screen="worker-home" onclick="window.app.workerNav('worker-home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="nav-btn" data-screen="worker-claim" onclick="window.app.workerNav('worker-claim')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span>Claim</span>
+        </button>
+        <button class="nav-btn" data-screen="worker-score" onclick="window.app.workerNav('worker-score')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <span>Score</span>
+        </button>
+        <button class="nav-btn" data-screen="worker-status" onclick="window.app.workerNav('worker-status')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <span>Status</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard Container -->
+  <div id="admin-app" class="screen">
+    <div class="admin-layout">
+      <aside class="admin-sidebar" id="admin-sidebar">
+        <div class="sidebar-logo" onclick="window.app.selectRole(null)">
+          <div class="sidebar-logo-icon">
+             <img src="/logo.png" alt="SpoofProof Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+          </div>
+          <span>SpoofProof</span>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="sidebar-btn active" data-panel="admin-overview" onclick="window.app.adminNav('admin-overview')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            <span>Overview</span>
+          </button>
+          <button class="sidebar-btn" data-panel="admin-monitor" onclick="window.app.adminNav('admin-monitor')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <span>Claims Monitor</span>
+          </button>
+          <button class="sidebar-btn" data-panel="admin-deepdive" onclick="window.app.adminNav('admin-deepdive')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <span>Deep Dive</span>
+          </button>
+          <button class="sidebar-btn" data-panel="admin-cluster" onclick="window.app.adminNav('admin-cluster')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8v3M7.5 17.5l3-5M16.5 17.5l-3-5"/></svg>
+            <span>Clusters</span>
+          </button>
+          <button class="sidebar-btn" data-panel="admin-review" onclick="window.app.adminNav('admin-review')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            <span>Review</span>
+          </button>
+        </nav>
+        <div class="sidebar-scenario">
+          <div class="demo-label-sm"><span class="demo-dot"></span> Scenario</div>
+          <select id="admin-scenario" onchange="window.app.setScenario(this.value)">
+            <option value="real">✅ Real Worker</option>
+            <option value="spoofer">📡 GPS Spoofer</option>
+            <option value="ring">🕸️ Fraud Ring</option>
+          </select>
+        </div>
+      </aside>
+      <main class="admin-main" id="admin-content"></main>
+    </div>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
